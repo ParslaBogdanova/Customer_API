@@ -13,7 +13,20 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return Customer::all();
+        $customers = Customer::all();
+
+        return $customers->map(function($customer){
+            return [
+                'customer_id' => $customer->customer_id,
+                'first_name'  => $customer->first_name,
+                'last_name' => $customer->last_name,
+                'address' => $customer->address,
+                'city' => $customer->city,
+                'state' => $customer->state,
+                'points' => $customer->points,
+                'is_golden_member' => $customer->goldMember() ? true : false,
+            ];
+        });
     }
 
     /**
@@ -21,29 +34,17 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $fields = $request->validate([
-            'first_name'=>'required|max:255',
-            'last_name'=>'required|max:255',
-            'points' => 'required|integer|min:0',
-        ]);
-
-        $customer = Customer::create($fields);
-        $isGoldMember = $customer->goldMember();
-
-        return response()->json([
-            'message' => 'Customer is a golder member',
-            'customer' => $customer,
-            'is_gold_member' => $isGoldMember,
-        ], 201);
+//
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer)
+    public function show()
     {
-        //
-    }
+}
+
+    
 
     /**
      * Update the specified resource in storage.

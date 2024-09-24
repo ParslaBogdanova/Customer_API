@@ -11,18 +11,20 @@ class Customer extends Model
 
     protected $table = 'customers';
     protected $primaryKey = 'customer_id';
-    protected $timestamps = false;
+    public $timestamps = false;
 
    protected $fillable = [
         'customer-id',
         'first_name',
         'last_name',
-        'birth_date',
-        'phone',
         'address',
         'city',
         'state',
         'points',
+    ];
+    protected $hidden = [
+        'birth_date',
+        'phone',
     ];
 
     public function goldMember()
