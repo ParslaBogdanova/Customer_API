@@ -14,7 +14,6 @@ class Customer extends Model
     public $timestamps = false;
 
    protected $fillable = [
-        'customer-id',
         'first_name',
         'last_name',
         'address',
@@ -22,10 +21,10 @@ class Customer extends Model
         'state',
         'points',
     ];
-    protected $hidden = [
-        'birth_date',
-        'phone',
-    ];
+    // protected $hidden = [
+    //     'birth_date',
+    //     'phone',
+    // ];
 
     public function goldMember()
     {
