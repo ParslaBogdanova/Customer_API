@@ -6,20 +6,33 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return Customer::all();
+        //return Customer::all();
+        //Laravel query builder
+     $results = DB::table('customers')
+    ->join('orders', 
+        'customers.customer_id', '=', 'orders.customer_id')
+    ->join('order_statuses',
+        'orders.status', '=', 'order_statuses.order_status_id')
+    ->select('customers.customer_id',
+            'customers.first_name',
+            'customers.last_name', 
+            'customers.address',
+            'customers.city',
+            'customers.state', 
+            'customers.points',
+            'orders.order_date',
+            'order_statuses.name')
+    ->get();
+
+    return response()->json($results);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $fields = $request->validate([
@@ -37,19 +50,18 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($customer_id)
     {
-        $customer = Customer::findOrFail($id);
-        return [
-            'customer_id' => $customer->customer_id,
-            'first_name'  => $customer->first_name,
-            'last_name' => $customer->last_name,
-            'address' => $customer->address,
-            'city' => $customer->city,
-            'state' => $customer->state,
-            'points' => $customer->points,
-            'is_golden_member' => $customer->goldMember() ? true : false,
-        ];
+        //Raw SQL
+     $orders = DB::select('SELECT 
+            customers.first_name, 
+            customers.last_name,
+            orders.order_date 
+            FROM customers 
+            LEFT JOIN orders
+            ON customers.customer_id = orders.customer_id 
+            WHERE customers.customer_id = ?', [$customer_id]);
+        return $orders;
 }
 
     
@@ -57,9 +69,21 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCustomerRequest $request, Customer $customer)
+    public function update(Request $request, Customer $customer)
     {
-        //
+        // Gate::authorize('modify', $customer);
+
+        // $fields = $request->validate([
+        //     'first_name'  => 'required|max:255',
+        //     'last_name' => 'required|max:255',
+        //     'address' => 'required|max:255',
+        //     'city' =>'required|max:255',
+        //     'state' => 'required|max:255',
+        //     'points' => 'required|integer|min:0',
+        // ]);
+
+        // $customer->update($fields);
+        // return $customer;
     }
 
     /**
