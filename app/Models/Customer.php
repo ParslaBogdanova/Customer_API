@@ -21,10 +21,10 @@ class Customer extends Model
         'state',
         'points',
     ];
-    // protected $hidden = [
-    //     'birth_date',
-    //     'phone',
-    // ];
+    protected $hidden = [
+        'birth_date',
+        'phone',
+    ];
 
     public function goldMember()
     {
