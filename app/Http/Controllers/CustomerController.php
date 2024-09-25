@@ -12,7 +12,6 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        //return Customer::all();
         //Laravel query builder
      $results = DB::table('customers')
     ->join('orders', 
@@ -29,7 +28,6 @@ class CustomerController extends Controller
             'orders.order_date',
             'order_statuses.name')
     ->get();
-
     return response()->json($results);
     }
 
@@ -55,7 +53,7 @@ class CustomerController extends Controller
         //Raw SQL
      $orders = DB::select('SELECT 
             customers.first_name, 
-            customers.last_name,
+            customerS.last_name,
             orders.order_date 
             FROM customers 
             LEFT JOIN orders
@@ -71,19 +69,6 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        // Gate::authorize('modify', $customer);
-
-        // $fields = $request->validate([
-        //     'first_name'  => 'required|max:255',
-        //     'last_name' => 'required|max:255',
-        //     'address' => 'required|max:255',
-        //     'city' =>'required|max:255',
-        //     'state' => 'required|max:255',
-        //     'points' => 'required|integer|min:0',
-        // ]);
-
-        // $customer->update($fields);
-        // return $customer;
     }
 
     /**
