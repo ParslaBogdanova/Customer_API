@@ -12,3 +12,4 @@ use App\Http\Controllers\OrderController;
 Route::apiResource('customers', CustomerController::class);
 Route::resource('customers.orders', OrderController::class);
 
+

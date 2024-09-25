@@ -11,25 +11,32 @@ use App\Http\Requests\UpdateCustomerRequest;
 
 class OrderController extends Controller
 {
-    public function index(Customer $customer){
-    $orders = Order::where('customer_id', $customer_id)->get();
-    return $orders;
+    public function index($customer_id)
+    {
+        $customer = Customer::findOrFail($customer_id);
+        $orders = $customer->orders()
+            ->select('orders.order_id', 'orders.customer_id', 'orders.order_date', 'orders.comments', 'orders.shipped_date', 'orders.shipper_id', 'order_statuses.name as status_name') // Specify only the fields you want
+            ->join('order_statuses', 'orders.status', '=', 'order_statuses.order_status_id') // Use the correct status column for joining
+            ->get();
+    
+        return response()->json($orders, 200);
+    }
+    
+
+
+    public function show($customer_id, $order_id)
+    {
+        $order = DB::table('orders')
+        ->join('order_statuses', 'orders.status', '=', 'order_statuses.order_status_id')
+        ->where('orders.order_id', $order_id)
+        ->where('orders.customer_id', $customer_id)
+        ->select('orders.*', 'order_statuses.name as status_name')
+        ->first();
+
+    if (!$order) {
+        return response()->json(['message' => 'Order not found'], 404);
     }
 
-    public function store(Request $request){
-    }
-
-    public function show($customer_id){
-        $customer = Customer::with('orders')->find($customer_id);
-        return $customer->orders;
-        // $order = Order::where('order_id', $order_id)
-        //     ->where('customer_id', $customer_id)
-        //     ->first();
-
-    }
-
-    public function update(Request $request){
-    }
-    public function destroy(){
+    return response()->json($order, 200);
     }
 }
