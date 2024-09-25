@@ -11,7 +11,7 @@ use App\Http\Requests\UpdateCustomerRequest;
 
 class OrderController extends Controller
 {
-    public function index($customer_id){
+    public function index(Customer $customer){
     $orders = Order::where('customer_id', $customer_id)->get();
     return $orders;
     }
