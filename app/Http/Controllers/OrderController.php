@@ -23,6 +23,18 @@ class OrderController extends Controller
     
         // return response()->json($orders, 200);
     }
+    public function store(Request $request){
+        // $fields = $request->validate([
+        //     'first_name'  => 'required|max:255',
+        //     'last_name' => 'required|max:255',
+        //     'address' => 'required|max:255',
+        //     'city' =>'required|max:255',
+        //     'state' => 'required|max:255',
+        //     'points' => 'required|integer|min:0',
+        // ]);
+        //     $customer = Customer::create($fields);
+        //     return $customer;
+    }
     
 
 

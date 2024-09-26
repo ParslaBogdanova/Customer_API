@@ -7,9 +7,16 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
-class CustomerController extends Controller
+class CustomerController extends Controller implements HasMiddleware
 {
+
+    public static function middleware(){
+        return [
+            new middleware('auth:sanctum', except: ['index', 'show'])
+        ];
+    }
     public function index()
     {
         //Laravel query builder
@@ -71,6 +78,19 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
+        Gate::authorize('modify', $customer);
+
+        $fields = $request->validate([
+            'first_name'  => 'required|max:255',
+            'last_name' => 'required|max:255',
+            'address' => 'required|max:255',
+            'city' =>'required|max:255',
+            'state' => 'required|max:255',
+            'points' => 'required|integer|min:0',
+        ]);
+
+        $customer->update($fields);
+        return $customer;
     }
 
     /**
@@ -78,6 +98,8 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        Gate::authorize('modify', $customer);
+        $customer->delete();
+        return ['message'=> 'The customer is deleted.'];
     }
 }
