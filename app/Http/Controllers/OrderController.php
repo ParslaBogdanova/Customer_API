@@ -26,19 +26,20 @@ class OrderController extends Controller
     
 
 
-    public function show($customer_id, $order_id)
+    public function show(Customer $customer, Order $order)
     {
-        $order = DB::table('orders')
-        ->join('order_statuses', 'orders.status', '=', 'order_statuses.order_status_id')
-        ->where('orders.order_id', $order_id)
-        ->where('orders.customer_id', $customer_id)
-        ->select('orders.*', 'order_statuses.name as status_name')
-        ->first();
+        return $order;
+    //     $order = DB::table('orders')
+    //     ->join('order_statuses', 'orders.status', '=', 'order_statuses.order_status_id')
+    //     ->where('orders.order_id', $order_id)
+    //     ->where('orders.customer_id', $customer_id)
+    //     ->select('orders.*', 'order_statuses.name as status_name')
+    //     ->first();
 
-    if (!$order) {
-        return response()->json(['message' => 'Order not found'], 404);
-    }
+    // if (!$order) {
+    //     return response()->json(['message' => 'Order not found'], 404);
+    // }
 
-    return response()->json($order, 200);
+    // return response()->json($order, 200);
     }
 }
