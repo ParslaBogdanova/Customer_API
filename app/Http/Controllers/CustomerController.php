@@ -52,8 +52,10 @@ class CustomerController extends Controller
     {
         //Raw SQL
      $orders = DB::select('SELECT 
+            customers.customer_id,
             customers.first_name, 
             customerS.last_name,
+            customers.address,
             orders.order_date 
             FROM customers 
             LEFT JOIN orders
